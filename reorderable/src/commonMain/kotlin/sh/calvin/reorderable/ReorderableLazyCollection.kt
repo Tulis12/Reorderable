@@ -284,11 +284,24 @@ open class ReorderableLazyCollectionState<out T> internal constructor(
     private val shouldItemMove: (draggingItem: Rect, item: Rect) -> Boolean = { draggingItem, item ->
         draggingItem.contains(item.center)
     },
+
+    private val onHoverStartState: State<(key: Any) -> Unit>,
+    private val onHoverEndState: State<(key: Any) -> Unit>,
 ) : ReorderableLazyCollectionStateInterface {
     private val onMoveStateMutex: Mutex = Mutex()
 
     internal val orientation: Orientation
         get() = state.layoutInfo.orientation
+
+    private var hoveredItemKey by mutableStateOf<Any?>(null)
+
+    private fun updateHoveredItem(newKey: Any?) {
+        if (hoveredItemKey == newKey) return
+
+        hoveredItemKey?.let { onHoverEndState.value(it) }
+        hoveredItemKey = newKey
+        newKey?.let { onHoverStartState.value(it) }
+    }
 
     private var draggingItemKey by mutableStateOf<Any?>(null)
     private val draggingItemIndex: Int?
@@ -389,6 +402,9 @@ open class ReorderableLazyCollectionState<out T> internal constructor(
     }
 
     internal fun onDragStop() {
+        draggingItemKey = null
+        updateHoveredItem(null)
+
         val previousDraggingItemInitialOffset = draggingItemLayoutInfo?.offset
 
         if (draggingItemIndex != null) {
@@ -484,6 +500,18 @@ open class ReorderableLazyCollectionState<out T> internal constructor(
         if (!onMoveStateMutex.tryLock()) return
         if (!scroller.isScrolling && !isScrollingStarted) {
             val draggingItemRect = Rect(startOffset, endOffset)
+
+            val hoveredItem = state.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                if (item.index == draggingItem.index) {
+                    false
+                } else {
+                    val itemRect = Rect(item.offset.toOffset(), item.size.toSize())
+                    draggingItemRect.contains(itemRect.center)
+                }
+            }
+
+            updateHoveredItem(hoveredItem?.key)
+
             // find a target item to move with
             val targetItem = findTargetItem(
                 draggingItemRect,

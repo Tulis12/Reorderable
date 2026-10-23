@@ -1,5 +1,6 @@
 package sh.calvin.reorderable.demo.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
@@ -40,9 +42,18 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 fun SimpleReorderableLazyVerticalGridScreen() {
     val haptic = rememberReorderHapticFeedback()
 
+    var hover: Int? by remember { mutableStateOf(null) }
+
     var list by remember { mutableStateOf(items) }
     val lazyGridState = rememberLazyGridState()
-    val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
+    val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState,
+        onHoverStart = {
+            println(it)
+            hover = it as Int
+        },
+        onHoverEnd = {
+            hover = null
+        }) { from, to ->
         list = list.toMutableList().apply {
             this[to.index] = this[from.index].also {
                 this[from.index] = this[to.index]
@@ -61,7 +72,13 @@ fun SimpleReorderableLazyVerticalGridScreen() {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         itemsIndexed(list, key = { _, item -> item.id }) { index, item ->
-            ReorderableItem(reorderableLazyGridState, item.id) {
+            val isSpecial = item.id % 4 == 0
+
+            ReorderableItem(
+                reorderableLazyGridState,
+                item.id,
+                enabled = !isSpecial
+            ) {
                 val interactionSource = remember { MutableInteractionSource() }
 
                 Card(
@@ -100,7 +117,20 @@ fun SimpleReorderableLazyVerticalGridScreen() {
                         },
                     interactionSource = interactionSource,
                 ) {
-                    Box(Modifier.fillMaxSize()) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .then(if(isSpecial) {
+                                Modifier.background(Color.Red)
+                            } else {
+                                Modifier
+                            })
+                            .then(if(item.id == hover) {
+                                Modifier.background(Color.Blue)
+                            } else {
+                                Modifier
+                            })
+                    ) {
                         IconButton(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)

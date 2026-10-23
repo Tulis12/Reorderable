@@ -26,11 +26,13 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListLayoutInfo
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
@@ -140,6 +142,8 @@ fun rememberReorderableLazyListState(
         pixelAmountProvider = { lazyListState.layoutInfo.mainAxisViewportSize * ScrollAmountMultiplier },
     ),
     onMove: suspend CoroutineScope.(from: LazyListItemInfo, to: LazyListItemInfo) -> Unit,
+    onHoverStart: State<(key: Any) -> Unit> = mutableStateOf<(Any) -> Unit>({}),
+    onHoverEnd: State<(key: Any) -> Unit> = mutableStateOf<(Any) -> Unit>({}),
 ): ReorderableLazyListState {
     val density = LocalDensity.current
     val scrollThresholdPx = with(density) { scrollThreshold.toPx() }
@@ -183,6 +187,8 @@ fun rememberReorderableLazyListState(
                     item.center.x in draggingItem.left..<draggingItem.right
                 }
             },
+            onHoverStart = onHoverStart,
+            onHoverEnd = onHoverEnd
         )
     }
     return state
@@ -258,6 +264,8 @@ class ReorderableLazyListState internal constructor(
     scroller: Scroller,
     layoutDirection: LayoutDirection,
     shouldItemMove: (draggingItem: Rect, item: Rect) -> Boolean,
+    onHoverStart: State<(key: Any) -> Unit>,
+    onHoverEnd: State<(key: Any) -> Unit>,
 ) : ReorderableLazyCollectionState<LazyListItemInfo>(
     state.toLazyCollectionState(),
     scope,
@@ -266,7 +274,8 @@ class ReorderableLazyListState internal constructor(
     scrollThresholdPadding,
     scroller,
     layoutDirection = layoutDirection,
-    shouldItemMove = shouldItemMove,
+    onHoverStartState = onHoverStart,
+    onHoverEndState = onHoverEnd,
 )
 
 /**

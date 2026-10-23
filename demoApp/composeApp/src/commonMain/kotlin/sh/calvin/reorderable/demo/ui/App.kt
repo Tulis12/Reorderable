@@ -58,21 +58,8 @@ internal fun App() {
                                 modifier = Modifier.background(MaterialTheme.colorScheme.background),
                                 initialRoute = "main",
                             ) {
-                                scene("main") { MainScreen(navController) }
-                                scene("SimpleReorderableLazyColumn") { SimpleReorderableLazyColumnScreen() }
-                                scene("ComplexReorderableLazyColumn") { ComplexReorderableLazyColumnScreen() }
-                                scene("TwoReorderableLazyColumnScreen") { TwoReorderableLazyColumnScreen() }
-                                scene("SimpleLongPressHandleReorderableLazyColumn") { SimpleLongPressHandleReorderableLazyColumnScreen() }
-                                scene("SimpleReorderableLazyVerticalGrid") { SimpleReorderableLazyVerticalGridScreen() }
-                                scene("SimpleReorderableLazyVerticalStaggeredGrid") { SimpleReorderableLazyVerticalStaggeredGridScreen() }
-                                scene("ReorderableColumn") { ReorderableColumnScreen() }
-                                scene("LongPressHandleReorderableColumn") { LongPressHandleReorderableColumnScreen() }
-                                scene("ReorderableColumnWithWeight") { ReorderableColumnWithWeightScreen() }
-                                scene("SimpleReorderableLazyRow") { SimpleReorderableLazyRowScreen() }
-                                scene("ComplexReorderableLazyRow") { ComplexReorderableLazyRowScreen() }
-                                scene("SimpleReorderableLazyHorizontalGrid") { SimpleReorderableLazyHorizontalGridScreen() }
-                                scene("SimpleReorderableLazyHorizontalStaggeredGrid") { SimpleReorderableLazyHorizontalStaggeredGridScreen() }
-                                scene("ReorderableRow") { ReorderableRowScreen() }
+                                scene("main") { SimpleReorderableLazyVerticalGridScreen() }
+
                             }
                         }
                     }
