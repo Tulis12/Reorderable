@@ -506,7 +506,11 @@ open class ReorderableLazyCollectionState<out T> internal constructor(
                     false
                 } else {
                     val itemRect = Rect(item.offset.toOffset(), item.size.toSize())
-                    draggingItemRect.contains(itemRect.center)
+                    val intersection = draggingItemRect.intersect(itemRect)
+
+                    !intersection.isEmpty &&
+                            intersection.width * intersection.height >=
+                            itemRect.width * itemRect.height * 0.1f
                 }
             }
 
