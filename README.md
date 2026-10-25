@@ -1,12 +1,16 @@
 # Reorderable
 
-### A fork of Reorderable for [ReadBear](https://github.com/Tulis12/ReadBear)
+### A fork of [Reorderable](https://github.com/Tulis12/Reorderable) for [ReadBear](https://github.com/Tulis12/ReadBear)
 
 Reorderable is a library for reordering items in Jetpack Compose. This fork currently focuses on LazyVerticalGrid, which is the only component required by ReadBear. Other components may work, but have not been tested.
 
 ## Changes from the original
 
 - Adds `onHoverStart` and `onHoverEnd` callbacks to the reorderable state, allowing you to react when an item is hovered over or no longer hovered over during a drag operation.
+
+## Use cases
+
+- [ReadBear](https://github.com/Tulis12/ReadBear) useful for adding item to a folder (hover over it and drop in)
 
 [//]: #
 [//]: # "## Usage"

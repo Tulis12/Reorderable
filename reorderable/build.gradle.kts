@@ -16,51 +16,19 @@ version = "3.1.0"
 
 kotlin {
     coreLibrariesVersion = "1.9.0"
+
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions.languageVersion.set(KotlinVersion.KOTLIN_1_9)
 
     androidTarget {
-        publishLibraryVariants("release", "debug")
+        publishLibraryVariants("release")
+
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
                     jvmTarget.set(JvmTarget.JVM_1_8)
                 }
             }
-        }
-    }
-
-    jvm {
-        compilations.all {
-            compileTaskProvider.configure {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_1_8)
-                }
-            }
-        }
-    }
-
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
-        binaries.executable()
-    }
-
-    js {
-        browser()
-        binaries.executable()
-    }
-
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-        macosX64(),
-        macosArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "reorderable"
-            isStatic = true
         }
     }
 
@@ -101,25 +69,41 @@ android {
 }
 
 mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(
+        "io.github.tulis12",
+        "reorderable",
+        "3.2.1-tulis.1"
+    )
+
     pom {
         name = "Reorderable"
-        description = "A library for reordering items in lazy lists and grids in Compose"
-        url = "https://github.com/Calvin-LL/Reorderable"
-        inceptionYear = "2023"
+        description = "A fork of a library for reordering items in lazy lists and grids in Compose"
+        url = "https://github.com/Tulis12/Reorderable"
+        inceptionYear = "2026"
 
         licenses {
             license {
                 name = "The Apache Software License, Version 2.0"
-                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
             }
         }
+
         scm {
-            connection = "scm:git:git://github.com/Calvin-LL/Reorderable.git"
-            developerConnection = "scm:git:ssh://github.com/Calvin-LL/Reorderable.git"
-            url = "https://github.com/Calvin-LL/Reorderable"
+            connection = "scm:git:git://github.com/Tulis12/Reorderable.git"
+            url = "https://github.com/Tulis12/Reorderable"
         }
+
         developers {
+            developer {
+                name = "Tulis"
+                email = "android@tulis.dev"
+                url = "https://tulis.dev"
+            }
+
             developer {
                 name = "Calvin Liang"
                 email = "me@calvin.sh"
