@@ -1,0 +1,11 @@
+*venv*
+.git
+.crenentials
+.env
+__pycache__
+*_data
+target
+third_party/
+build
+.gradle
+.kotlin

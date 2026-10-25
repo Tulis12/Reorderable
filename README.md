@@ -25,7 +25,7 @@ reorderable = "3.2.1-tulis.1"
 
 [libraries]
 #...
-reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+reorderable = { module = "io.github.tulis12:reorderable", version.ref = "reorderable" }
 ```
 
 or
